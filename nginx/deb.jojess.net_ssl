@@ -1,0 +1,25 @@
+server {
+    listen 443 ssl http2;
+    server_name deb.jojess.net;
+    root /nu/conf/japtr;
+
+    location / {
+       index index.html index.htm index.nginx-debian.html;
+       try_files $uri $uri/ =404;
+    }
+
+    location /dists {
+        autoindex on;
+    }
+
+    location /pool {
+        autoindex on;
+    }
+
+    ssl_certificate /etc/letsencrypt/live/kawamajoshou.jojess.net/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/kawamajoshou.jojess.net/privkey.pem; # managed by Certbot
+    #include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    include /etc/nginx/jojess-options-ssl-nginx.conf; # managed by jojess
+    # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+

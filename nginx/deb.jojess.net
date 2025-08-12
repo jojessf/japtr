@@ -1,0 +1,20 @@
+server {
+    listen 80;
+    server_name deb.jojess.net;
+    root /nu/conf/japtr;
+
+    location / {
+       index index.html index.htm index.nginx-debian.html;
+       try_files $uri $uri/ =404;
+    }
+
+    location /dists {
+        autoindex on;
+    }
+
+    location /pool {
+        autoindex on;
+    }
+
+}
+
