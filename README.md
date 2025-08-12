@@ -8,12 +8,13 @@ Setup
 -----
 * depends:
 ```
-
+sudo apt install cpanm nginx nginx-extras fcgiwrap php8.2-fpm dpkg-dev gpg wget dpkg
+sudo cpanm Getopt::Lazier
 ```
 
 * update nginx conf host and certs
 * stage nginx conf:
-`sudo cp nginx* /etc/nginx/sites-enabled`
+`sudo cp nginx/* /etc/nginx/sites-enabled/`
 
 Using my repo, if u lazy:
 -------------------------
