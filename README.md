@@ -4,6 +4,11 @@ Jojess::Japtr
 -------------
 deb spider / apt repo builder
 
+
+<img width="772" height="649" alt="image" src="https://github.com/user-attachments/assets/2de2cec5-e440-4bfb-8297-55679de6b3a0" />
+<img width="624" height="150" alt="image" src="https://github.com/user-attachments/assets/0bebbc9c-3a0d-40e7-9bc7-fa61a2b0174c" />
+
+
 Setup
 -----
 * depends:
