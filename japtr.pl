@@ -77,8 +77,8 @@ sub get_stuff {
    my $opt  = $self->{opt};
    my $urls = $self->{urls};
 
-   push(@{$urls}, "https://discord.com/api/download?platform=linux&format=deb");
-
+   push(@{$urls}, "https://discord.com/api/download?platform=linux&format=deb") if $opt->{discord};
+   push(@{$urls}, "https://downloads.slack-edge.com/desktop-releases/linux/x64/4.46.101/slack-desktop-4.46.101-amd64.deb") if $opt->{slack};
    chdir($opt->{rpath});
    chdir($opt->{tmp});
    foreach my $url (@{$urls}) {
@@ -123,6 +123,7 @@ sub tmp_to_deb {
 
       # TODO mktree
       my $odi = "../pool/main/".$dnfo->{firstletter}."/".$dnfo->{Package}."/";
+      &{File::Path::make_path}($odi) if ! -d $odi;
       print $fil . "\t" . $odi . $ofi . "\n";
       File::Copy::move($fil, $odi.$ofi) or die "$odi???";
    }
