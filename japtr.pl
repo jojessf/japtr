@@ -17,6 +17,7 @@ sub new {
    my $opt   = shift;
    my $urls  = shift;
       $opt->{rpath}      //= "/nu/conf/jojessapt";
+      $opt->{apath}      //= "/nu/conf/jojessapt/archive";
       $opt->{tmp}        //= "japtrtmp";
       $opt->{Packages}   //= "dists/stable/main/binary-amd64/Packages";
       $opt->{ReleaseDir} //= "dists/stable";
@@ -24,14 +25,51 @@ sub new {
       $opt->{inRelease}    //= "InRelease";
       $opt->{arch}       //= "amd64";
       $opt->{gpgkeyname} //= "jojess";
+      $opt->{retaincopyq} //= 3;
 
    my $self  = {opt=>$opt, urls=>$urls};
    
    bless ($self, $class);
    
+   $self->archiveold if $opt->{retaincopyq};
    $self->doit if $opt->{doit};
    
    return $self;
+}
+
+sub archiveold {
+   # lazy lil archive routine
+   my $self = shift;
+   chdir($opt->{rpath}) or die;
+   my @files = split("\n", `find -type f -name "*deb"`);
+   my $sort = {};
+   foreach my $file (@files) {
+      if ( $file =~ /^(.*\/)(.*?)$/ ) {
+         my $pat = $1;
+         my $fil = $2;
+         next if $pat !~ /^..pool/; # these are the files that slow down the inrelease gen , we don't need to host a bajillion different versions of discord lmao
+         push (@{$sort->{$pat}}, $fil);
+      }
+   }
+   foreach my $key (keys %{$sort}) {
+      my @keyfiles = ();
+      foreach my $fil (sort @{$sort->{$key}}) {
+         push(@keyfiles,$fil);
+      }
+      for (my $i=1;  $i<=  $self->{opt}->{retaincopyq}; $i++) {
+         pop(@keyfiles);
+      }
+      mkdir($self->{opt}->{apath});
+
+      my $odi = $self->{opt}->{apath} .  "/" . $key;
+      &{File::Path::make_path}( $odi )  if ! -d $odi;
+      foreach my $fil (@keyfiles) {
+         my $ifi = $key . $fil;
+         my $ofi = $odi . $fil;
+         &{File::Copy::move}($ifi,$ofi) if (( -e $ifi )and (! -e $ofi ));
+      }
+   }
+   return;
 }
 
 sub doit {
